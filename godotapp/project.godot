@@ -16,7 +16,17 @@ _global_script_class_icons={
 [application]
 
 config/name="GodotJSGateway"
+run/main_scene="res://src/Main/Main.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+GodotGateway="*res://src/scripts/GodotGateway.gd"
+JS_API="*res://src/scripts/JS_API.gd"
+
+[editor_plugins]
+
+enabled=PoolStringArray( "gut" )
 
 [rendering]
 
