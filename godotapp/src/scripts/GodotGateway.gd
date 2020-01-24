@@ -2,6 +2,22 @@ extends Node
 
 signal event(name, data)
 
+# Structure of the dictionary:
+# KEYS: events names
+# VARS: array of arrays, with target node and target function
+#
+# Behaviour:
+# On 'event_name' event, the 'func_name' is called on the 'node'
+# 	{
+#		"event_name": [
+#			[ node:Node, func_name:String ],
+#			...
+#		],
+#		...
+# 	}
+var _event_listeners : Dictionary = {}
+
+
 func new_event(e_name:String, e_data:String) -> void:
 	JS_API.call_function("gatewayToJS.newEvent", [e_name, e_data])
 
@@ -29,3 +45,35 @@ func _process_events() -> void:
 		GodotGateway._call_func("next")
 		
 	GodotGateway._call_func("clearEventsArray")
+
+
+func _process_event(e_name:String, e_data) -> void:
+	if not _event_listeners.has(e_name):
+		return
+	
+	var arr : Array = _event_listeners[e_name] 
+	for row in arr:
+		var node : Node = row[0]
+		var func_name : String = row[1]
+		node.call(func_name, e_data)
+
+
+func add_event_listener(e_name:String, node:Node, func_name:String) -> void:
+	if not _event_listeners.has(e_name):
+		_event_listeners[e_name] = []
+	
+	var arr : Array = _event_listeners[e_name] 
+	arr.push_back([node, func_name])
+
+
+func has_event_listener(e_name:String, node:Node, func_name:String) -> bool:
+	if not _event_listeners.has(e_name):
+		return false
+	
+	var arr : Array = _event_listeners[e_name] 
+	for row in arr:
+		if row[0] == node:
+			if row[1] == func_name:
+				return true
+	
+	return false
