@@ -27,7 +27,7 @@ func _call_func(func_name:String):
 
 
 func _ready():
-	GodotGateway.call_deferred("new_event", 'ready', '')
+	GodotGateway.call_deferred("new_event", "ready", "")
 
 
 func _process(delta):
@@ -41,13 +41,14 @@ func _process_events() -> void:
 		var e_data = GodotGateway._call_func("getCurrentEventData")
 		
 		emit_signal("event", e_name, e_data)
+		_call_listeners(e_name, e_data)
 		
 		GodotGateway._call_func("next")
 		
 	GodotGateway._call_func("clearEventsArray")
 
 
-func _process_event(e_name:String, e_data) -> void:
+func _call_listeners(e_name:String, e_data) -> void:
 	if not _event_listeners.has(e_name):
 		return
 	
