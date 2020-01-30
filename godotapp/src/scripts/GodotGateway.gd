@@ -26,11 +26,22 @@ func _call_func(func_name:String):
 	return JS_API.call_function("gatewayToGodot." + func_name)
 
 
-func _ready():
-	GodotGateway.call_deferred("new_event", "ready", "")
+func _ready() -> void:
+	GodotGateway.call_deferred("_check_gateways_and_create_ready_event")
 
 
-func _process(delta):
+func _check_gateways_and_create_ready_event() -> void:
+	if not JS_API.variable_exist("gatewayToGodot"):
+		push_warning("Gateway to Godot is undefined. Events will not be processed")
+		GodotGateway.set_process(false)
+		
+	if not JS_API.variable_exist("gatewayToJS"):
+		push_warning("Gateway to JS is undefined. 'new_event' function will not work")
+	else:
+		GodotGateway.call_deferred("new_event", "ready", "")
+
+
+func _process(delta) -> void:
 	if GodotGateway._call_func("hasEvent"):
 		GodotGateway._process_events()
 
