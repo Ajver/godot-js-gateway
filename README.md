@@ -8,6 +8,6 @@ All code is based on the JavaScript singleton from official Godot Engine: [read 
 
 JavaScript side of the code was inspired by thread on [Godot's questions](https://godotengine.org/qa/23735/possible-call-gdscript-function-javascript-project-export)
 
-### Demo
+## Demo
 
 ![Demonstration showing message sending between Godot app and JS app](demo.gif)
