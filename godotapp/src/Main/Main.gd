@@ -9,7 +9,5 @@ func _ready() -> void:
 
 func _on_event(e_name, e_data) -> void:
 	match e_name:
-		"message":
-			ui.show_message(e_data)
 		_:
-			push_error("Unexpected event name: " + str(e_name))
+			print("Unexpected event name: " + str(e_name))

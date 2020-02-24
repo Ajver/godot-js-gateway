@@ -78,6 +78,20 @@ func add_event_listener(e_name:String, node:Node, func_name:String) -> void:
 	arr.push_back([node, func_name])
 
 
+func remove_event_listener(e_name:String, node:Node, func_name:String) -> void:
+	if not _event_listeners.has(e_name):
+		return
+	
+	var arr : Array = _event_listeners[e_name]
+	var i := 0
+	for row in arr:
+		if row[0] == node:
+			if row[1] == func_name:
+				arr.remove(i)
+		
+		i += 1
+
+
 func has_event_listener(e_name:String, node:Node, func_name:String) -> bool:
 	if not _event_listeners.has(e_name):
 		return false

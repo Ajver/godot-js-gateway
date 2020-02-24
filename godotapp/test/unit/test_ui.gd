@@ -12,6 +12,7 @@ func before_each() -> void:
 
 
 func after_each() -> void:
+	GodotGateway.remove_event_listener("message", ui, "show_message")
 	ui.free()
 
 
@@ -27,3 +28,8 @@ func test_show_message_shows_popup() -> void:
 func test_show_message_sets_text() -> void:
 	ui.show_message("message_text")
 	assert_eq("message_text", msg_popup.dialog_text)
+
+
+func test_shows_popup_on_event_from_js() -> void:
+	GodotGateway._call_listeners("message", "message from fake JS")
+	assert_eq("message from fake JS", msg_popup.dialog_text)
