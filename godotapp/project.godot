@@ -17,8 +17,8 @@ config/icon="res://icon.png"
 
 [autoload]
 
-GodotGateway="*res://src/scripts/GodotGateway.gd"
-JS_API="*res://src/scripts/JS_API.gd"
+GodotGateway="*res://src/GodotGateway/GodotGateway.gd"
+JS_API="*res://src/GodotGateway/JS_API.gd"
 
 [editor_plugins]
 
