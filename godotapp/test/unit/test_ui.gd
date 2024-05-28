@@ -1,8 +1,8 @@
-extends "res://addons/gut/test.gd"
+extends GutTest
 
 var UI = preload("res://src/UI/UI.tscn")
 var ui : Control = null
-var msg_popup : Popup = null 
+var msg_popup : AcceptDialog = null 
 
 
 func before_each() -> void:

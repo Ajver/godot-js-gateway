@@ -37,7 +37,7 @@ func params_array_to_str(params_array:Array) -> String:
 func variable_exist(variable:String) -> bool:
 	var eval_str = "(typeof " + variable + " !== 'undefined')"
 	var eval_return = JS_API.eval(eval_str)
-	return eval_return
+	return eval_return == true
 
 
 func is_available():
