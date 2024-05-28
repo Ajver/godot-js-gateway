@@ -4,6 +4,7 @@ extends Node
 
 
 func _ready() -> void:
+	JS_API.eval_file("res://src/Main/demo-js-app.js")
 	GodotGateway.connect("event", Callable(self, "_on_event"))
 
 

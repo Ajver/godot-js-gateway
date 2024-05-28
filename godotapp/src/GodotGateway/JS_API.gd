@@ -7,11 +7,28 @@ func _init():
 	_is_available = OS.has_feature("web")
 
 
-func eval(js_code:String):
+func eval(js_code:String, global_context: bool = false):
 	if is_available():
-		return JavaScriptBridge.eval(js_code)
+		return JavaScriptBridge.eval(js_code, global_context)
 	else:
 		return null
+
+
+func eval_file(file_path: String) -> void:
+	if not FileAccess.file_exists(file_path):
+		printerr("No file at path: " + file_path)
+		return
+
+	var file: FileAccess = FileAccess.open(file_path, FileAccess.READ)
+
+	if FileAccess.get_open_error() != OK:
+		printerr("Couldn't open file from path: " + file_path)
+		return
+
+	var content := file.get_as_text()
+	eval(content)
+
+	file.close()
 
 
 func call_function(func_name:String, params_array:Array = []):
@@ -36,8 +53,8 @@ func params_array_to_str(params_array:Array) -> String:
 
 func variable_exist(variable:String) -> bool:
 	var eval_str = "(typeof " + variable + " !== 'undefined')"
-	var eval_return = JS_API.eval(eval_str)
-	return eval_return == true
+	var eval_return = JS_API.eval(eval_str, true)
+	return eval_return and bool(eval_return)
 
 
 func is_available():

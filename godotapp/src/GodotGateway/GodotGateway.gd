@@ -18,24 +18,25 @@ signal event(name, data)
 var _event_listeners : Dictionary = {}
 
 
-func new_event(e_name:String, e_data:String) -> void:
-	JS_API.call_function("gatewayToJS.newEvent", [e_name, e_data])
-
-
-func _call_func(func_name:String):
-	return JS_API.call_function("gatewayToGodot." + func_name)
-
-
 func _ready() -> void:
+	JS_API.eval_file("res://src/GodotGateway/GodotGateway.js")
 	GodotGateway.call_deferred("_check_gateways_and_create_ready_event")
 
 
+func new_event(e_name:String, e_data:String) -> void:
+	JS_API.call_function("document.gatewayToJS.newEvent", [e_name, e_data])
+
+
+func _call_func(func_name:String):
+	return JS_API.call_function("document.gatewayToGodot." + func_name)
+
+
 func _check_gateways_and_create_ready_event() -> void:
-	if not JS_API.variable_exist("gatewayToGodot"):
+	if not JS_API.variable_exist("document.gatewayToGodot"):
 		push_warning("Gateway to Godot is undefined. Events will not be processed")
 		GodotGateway.set_process(false)
 		
-	if not JS_API.variable_exist("gatewayToJS"):
+	if not JS_API.variable_exist("document.gatewayToJS"):
 		push_warning("Gateway to JS is undefined. 'new_event' function will not work")
 	else:
 		GodotGateway.call_deferred("new_event", "ready", "")
