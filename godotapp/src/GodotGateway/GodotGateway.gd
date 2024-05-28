@@ -66,7 +66,8 @@ func _call_listeners(e_name:String, e_data) -> void:
 	
 	var arr : Array = _event_listeners[e_name] 
 	for listener: Callable in arr:
-		listener.call(e_data)
+		if listener.is_valid():
+			listener.call(e_data)
 
 
 func add_event_listener(e_name:String, listener: Callable) -> void:

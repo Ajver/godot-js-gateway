@@ -11,7 +11,7 @@ document.gatewayToJS.addEventListener("message_from_godot", data => {
 const createDemoEventButton = () => {
 	const btn = document.createElement('button');
 	btn.addEventListener('click', () => {
-		document.gatewayToGodot.newEvent('message', 'This message comes from JS App');
+		document.gatewayToGodot.newEvent('message_from_js', 'This message comes from JS App');
 	})
 	
 	btn.innerHTML = 'Call JS event';
