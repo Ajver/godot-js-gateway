@@ -5,7 +5,7 @@ extends Control
 
 
 func _ready() -> void:
-	GodotGateway.add_event_listener("message", self, "show_message")
+	GodotGateway.add_event_listener("message", show_message)
 
 
 func show_message(msg:String) -> void:

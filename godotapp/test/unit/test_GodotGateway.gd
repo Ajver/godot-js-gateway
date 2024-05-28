@@ -24,26 +24,26 @@ func after_each() -> void:
 
 func test_has_not_listener_by_default() -> void:
 	var fake_class_inst = _get_fake_class_inst()
-	assert_false(GodotGateway.has_event_listener("test_event", fake_class_inst, "_on_test_event"))
+	assert_false(GodotGateway.has_event_listener("test_event", fake_class_inst._on_test_event))
 
 
 func test_add_event_listener() -> void:
 	var fake_class_inst = _get_fake_class_inst_connected_to_gateway()
-	assert_true(GodotGateway.has_event_listener("test_event", fake_class_inst, "_on_test_event"))
+	assert_true(GodotGateway.has_event_listener("test_event", fake_class_inst._on_test_event))
 
 
 func test_multiple_event_listeners_to_THE_SAME_event_on_the_same_node() -> void:
 	var fake_class_inst = _get_fake_class_inst_connected_to_gateway()
-	GodotGateway.add_event_listener("test_event", fake_class_inst, "_on_other_test_event")
-	assert_true(GodotGateway.has_event_listener("test_event", fake_class_inst, "_on_test_event"))
-	assert_true(GodotGateway.has_event_listener("test_event", fake_class_inst, "_on_other_test_event"))
+	GodotGateway.add_event_listener("test_event", fake_class_inst._on_other_test_event)
+	assert_true(GodotGateway.has_event_listener("test_event", fake_class_inst._on_test_event))
+	assert_true(GodotGateway.has_event_listener("test_event", fake_class_inst._on_other_test_event))
 
 
 func test_multiple_event_listeners_to_DIFFERENT_event_on_the_same_node() -> void:
 	var fake_class_inst = _get_fake_class_inst_connected_to_gateway()
-	GodotGateway.add_event_listener("another_test_event", fake_class_inst, "_on_other_test_event")
-	assert_true(GodotGateway.has_event_listener("test_event", fake_class_inst, "_on_test_event"))
-	assert_true(GodotGateway.has_event_listener("another_test_event", fake_class_inst, "_on_other_test_event"))
+	GodotGateway.add_event_listener("another_test_event", fake_class_inst._on_other_test_event)
+	assert_true(GodotGateway.has_event_listener("test_event", fake_class_inst._on_test_event))
+	assert_true(GodotGateway.has_event_listener("another_test_event", fake_class_inst._on_other_test_event))
 
 
 func test_event_listener_called() -> void:
@@ -54,7 +54,7 @@ func test_event_listener_called() -> void:
 
 func test_NOT_call_other_events() -> void:
 	var fake_class_inst = _get_fake_class_inst_connected_to_gateway()
-	GodotGateway.add_event_listener("another_test_event", fake_class_inst, "_on_other_test_event")
+	GodotGateway.add_event_listener("another_test_event", fake_class_inst._on_other_test_event)
 	GodotGateway._call_listeners("test_event", "test_data") 
 	assert_true(fake_class_inst.test_func_called)
 	assert_false(fake_class_inst.other_test_func_called)
@@ -62,22 +62,22 @@ func test_NOT_call_other_events() -> void:
 
 func test_remove_event_listener() -> void:
 	var fake_class_inst = _get_fake_class_inst_connected_to_gateway()
-	GodotGateway.remove_event_listener("test_event", fake_class_inst, "_on_test_event")
-	assert_false(GodotGateway.has_event_listener("test_event", fake_class_inst, "_on_test_event"))
+	GodotGateway.remove_event_listener("test_event", fake_class_inst._on_test_event)
+	assert_false(GodotGateway.has_event_listener("test_event", fake_class_inst._on_test_event))
 
 
 func test_not_remove_all_event_listeners() -> void:
 	var fake_class_inst = _get_fake_class_inst_connected_to_gateway()
 	var other_fake_class = _get_fake_class_inst_connected_to_gateway()
 	
-	GodotGateway.remove_event_listener("test_event", fake_class_inst, "_on_test_event")
-	assert_false(GodotGateway.has_event_listener("test_event", fake_class_inst, "_on_test_event"))
-	assert_true(GodotGateway.has_event_listener("test_event", other_fake_class, "_on_test_event"))
+	GodotGateway.remove_event_listener("test_event", fake_class_inst._on_test_event)
+	assert_false(GodotGateway.has_event_listener("test_event", fake_class_inst._on_test_event))
+	assert_true(GodotGateway.has_event_listener("test_event", other_fake_class._on_test_event))
 
 
 func _get_fake_class_inst_connected_to_gateway() -> FakeNode:
 	var fake_class_inst = _get_fake_class_inst()
-	GodotGateway.add_event_listener("test_event", fake_class_inst, "_on_test_event")
+	GodotGateway.add_event_listener("test_event", fake_class_inst._on_test_event)
 	return fake_class_inst
 
 

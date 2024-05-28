@@ -4,13 +4,13 @@ signal event(name, data)
 
 # Structure of the dictionary:
 # KEYS: events names
-# VARS: array of arrays, with target node and target function
+# VARS: array of callbacks to call when the event occurs
 #
 # Behaviour:
-# On 'event_name' event, the 'func_name' is called on the 'node'
+# On 'event_name' event, 
 # 	{
 #		"event_name": [
-#			[ node:Node, func_name:String ],
+#			Callable,
 #			...
 #		],
 #		...
@@ -65,42 +65,38 @@ func _call_listeners(e_name:String, e_data) -> void:
 		return
 	
 	var arr : Array = _event_listeners[e_name] 
-	for row in arr:
-		var node : Node = row[0]
-		var func_name : String = row[1]
-		node.call(func_name, e_data)
+	for listener: Callable in arr:
+		listener.call(e_data)
 
 
-func add_event_listener(e_name:String, node:Node, func_name:String) -> void:
+func add_event_listener(e_name:String, listener: Callable) -> void:
 	if not _event_listeners.has(e_name):
 		_event_listeners[e_name] = []
 	
 	var arr : Array = _event_listeners[e_name] 
-	arr.push_back([node, func_name])
+	arr.push_back(listener)
 
 
-func remove_event_listener(e_name:String, node:Node, func_name:String) -> void:
+func remove_event_listener(e_name:String, listener: Callable) -> void:
 	if not _event_listeners.has(e_name):
 		return
 	
 	var arr : Array = _event_listeners[e_name]
 	var i := 0
-	for row in arr:
-		if row[0] == node:
-			if row[1] == func_name:
-				arr.remove_at(i)
-		
-		i += 1
+	for cb in arr:
+		if cb == listener:
+			arr.remove_at(i)
+		else:
+			i += 1
 
 
-func has_event_listener(e_name:String, node:Node, func_name:String) -> bool:
+func has_event_listener(e_name:String, listener: Callable) -> bool:
 	if not _event_listeners.has(e_name):
 		return false
 	
 	var arr : Array = _event_listeners[e_name] 
-	for row in arr:
-		if row[0] == node:
-			if row[1] == func_name:
-				return true
+	for cb in arr:
+		if cb == listener:
+			return true
 	
 	return false

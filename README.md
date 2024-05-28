@@ -67,7 +67,7 @@ On Godot end write code to handle this event:
 
 ```gdscript
 func _ready():
-	GodotGateway.add_event_listener("msg_from_js", self, "handle_msg_from_js")
+	GodotGateway.add_event_listener("msg_from_js", self.handle_msg_from_js)
 
 func handle_msg_from_js(content: String):
 	print("This message came from JS end: ", content)

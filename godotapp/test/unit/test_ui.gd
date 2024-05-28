@@ -12,7 +12,7 @@ func before_each() -> void:
 
 
 func after_each() -> void:
-	GodotGateway.remove_event_listener("message", ui, "show_message")
+	GodotGateway.remove_event_listener("message", ui.show_message)
 	ui.free()
 
 
