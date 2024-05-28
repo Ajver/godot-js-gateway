@@ -1,32 +1,12 @@
 
-// Called 20 times per second
-window.setInterval(() => {
-		
-	if(document.gatewayToJS.hasEvent()) {		
-		do {
-			const event = document.gatewayToJS.popEvent();
-			onEvent(event.name, event.data);
-		}while(document.gatewayToJS.hasEvent());	
-	
-		document.gatewayToJS.clearEventsArray();
-	}
-	
-}, 50);
+document.gatewayToJS.addEventListener("ready", () => {
+	createDemoEventButton();
+})
 
-const onEvent = (eventName, eventData) => {
-	console.log("Got event from godot: ", eventName, eventData)
+document.gatewayToJS.addEventListener("message_from_godot", data => {
+	alert(data);
+})
 
-	switch(eventName) {
-		case 'ready':
-			createDemoEventButton();
-			break;
-		case 'message_from_godot':
-			alert(eventData);
-			break;
-		default:
-			console.log("Unexpected event:", eventName, eventData)
-	}
-}
 
 const createDemoEventButton = () => {
 	const btn = document.createElement('button');
@@ -36,7 +16,6 @@ const createDemoEventButton = () => {
 	
 	btn.innerHTML = 'Call JS event';
 	
-	// I know, that I should do this via css, but it's just demo
 	btn.style.position = 'fixed';
 	btn.style.right = 0;
 	btn.style.top = 0;
