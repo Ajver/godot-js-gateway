@@ -1,10 +1,10 @@
 extends Node
 
-onready var ui = $UI
+@onready var ui = $UI
 
 
 func _ready() -> void:
-	GodotGateway.connect("event", self, "_on_event")
+	GodotGateway.connect("event", Callable(self, "_on_event"))
 
 
 func _on_event(e_name, e_data) -> void:

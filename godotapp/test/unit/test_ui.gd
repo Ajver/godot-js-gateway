@@ -6,9 +6,9 @@ var msg_popup : Popup = null
 
 
 func before_each() -> void:
-	ui = UI.instance()
+	ui = UI.instantiate()
 	add_child(ui)
-	msg_popup = ui.find_node("MessagePopup")
+	msg_popup = ui.find_child("MessagePopup")
 
 
 func after_each() -> void:

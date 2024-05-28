@@ -87,7 +87,7 @@ func remove_event_listener(e_name:String, node:Node, func_name:String) -> void:
 	for row in arr:
 		if row[0] == node:
 			if row[1] == func_name:
-				arr.remove(i)
+				arr.remove_at(i)
 		
 		i += 1
 

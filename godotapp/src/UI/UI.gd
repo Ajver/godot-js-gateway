@@ -1,7 +1,7 @@
 extends Control
 
-onready var msg_popup : AcceptDialog = $MessagePopup
-onready var msg_text_edit : TextEdit = find_node("MessageTextEdit")
+@onready var msg_popup : AcceptDialog = $MessagePopup
+@onready var msg_text_edit : TextEdit = find_child("MessageTextEdit")
 
 
 func _ready() -> void:

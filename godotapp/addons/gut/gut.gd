@@ -1,3 +1,4 @@
+@tool
 ################################################################################
 #(G)odot (U)nit (T)est class
 #
@@ -31,7 +32,6 @@
 # Version 6.8.1
 ################################################################################
 #extends "res://addons/gut/gut_gui.gd"
-tool
 extends Control
 var _version = '6.8.1'
 
@@ -43,43 +43,43 @@ var _deprecated_tracker = _utils.ThingCounter.new()
 # ###########################
 # Editor Variables
 # ###########################
-export(String) var _select_script = ''
-export(String) var _tests_like = ''
-export(String) var _inner_class_name = ''
+@export var _select_script: String = ''
+@export var _tests_like: String = ''
+@export var _inner_class_name: String = ''
 
-export var _run_on_load = false
-export var _should_maximize = false setget set_should_maximize, get_should_maximize
+@export var _run_on_load = false
+@export var _should_maximize = false: get = get_should_maximize, set = set_should_maximize
 
-export var _should_print_to_console = true setget set_should_print_to_console, get_should_print_to_console
-export(int, 'Failures only', 'Tests and failures', 'Everything') var _log_level = 1 setget set_log_level, get_log_level
+@export var _should_print_to_console = true: get = get_should_print_to_console, set = set_should_print_to_console
+@export var _log_level = 1: get = get_log_level, set = set_log_level # (int, 'Failures only', 'Tests and failures', 'Everything')
 # This var is JUST used to expose this setting in the editor
 # the var that is used is in the _yield_between hash.
-export var _yield_between_tests = true setget set_yield_between_tests, get_yield_between_tests
-export var _disable_strict_datatype_checks = false setget disable_strict_datatype_checks, is_strict_datatype_checks_disabled
+@export var _yield_between_tests = true: get = get_yield_between_tests, set = set_yield_between_tests
+@export var _disable_strict_datatype_checks = false: get = is_strict_datatype_checks_disabled, set = disable_strict_datatype_checks
 # The prefix used to get tests.
-export var _test_prefix = 'test_'
-export var _file_prefix = 'test_'
-export var _file_extension = '.gd'
-export var _inner_class_prefix = 'Test'
+@export var _test_prefix = 'test_'
+@export var _file_prefix = 'test_'
+@export var _file_extension = '.gd'
+@export var _inner_class_prefix = 'Test'
 
-export(String) var _temp_directory = 'user://gut_temp_directory'
-export(String) var _export_path = '' setget set_export_path, get_export_path
+@export var _temp_directory: String = 'user://gut_temp_directory'
+@export var _export_path: String = '': get = get_export_path, set = set_export_path
 
-export var _include_subdirectories = false setget set_include_subdirectories, get_include_subdirectories
+@export var _include_subdirectories = false: get = get_include_subdirectories, set = set_include_subdirectories
 # Allow user to add test directories via editor.  This is done with strings
 # instead of an array because the interface for editing arrays is really
 # cumbersome and complicates testing because arrays set through the editor
 # apply to ALL instances.  This also allows the user to use the built in
 # dialog to pick a directory.
-export(String, DIR) var _directory1 = ''
-export(String, DIR) var _directory2 = ''
-export(String, DIR) var _directory3 = ''
-export(String, DIR) var _directory4 = ''
-export(String, DIR) var _directory5 = ''
-export(String, DIR) var _directory6 = ''
-export(int, 'FULL', 'PARTIAL') var _double_strategy = _utils.DOUBLE_STRATEGY.PARTIAL setget set_double_strategy, get_double_strategy
-export(String, FILE) var _pre_run_script = '' setget set_pre_run_script, get_pre_run_script
-export(String, FILE) var _post_run_script = '' setget set_post_run_script, get_post_run_script
+@export var _directory1 = '' # (String, DIR)
+@export var _directory2 = '' # (String, DIR)
+@export var _directory3 = '' # (String, DIR)
+@export var _directory4 = '' # (String, DIR)
+@export var _directory5 = '' # (String, DIR)
+@export var _directory6 = '' # (String, DIR)
+@export var _double_strategy = _utils.DOUBLE_STRATEGY.PARTIAL: get = get_double_strategy, set = set_double_strategy # (int, 'FULL', 'PARTIAL')
+@export var _pre_run_script = '': get = get_pre_run_script, set = set_pre_run_script # (String, FILE)
+@export var _post_run_script = '': get = get_post_run_script, set = set_post_run_script # (String, FILE)
 # The instance that is created from _pre_run_script.  Accessible from
 # get_pre_run_script_instance.
 var _pre_run_script_instance = null
@@ -146,7 +146,7 @@ const SIGNAL_STOP_YIELD_BEFORE_TEARDOWN = 'stop_yield_before_teardown'
 func _init():
 	# This min size has to be what the min size of the GutScene's min size is
 	# but it has to be set here and not inferred i think.
-	rect_min_size =Vector2(740, 250)
+	custom_minimum_size =Vector2(740, 250)
 
 	add_user_signal(SIGNAL_TESTS_FINISHED)
 	add_user_signal(SIGNAL_STOP_YIELD_BEFORE_TEARDOWN)
@@ -160,7 +160,7 @@ func _init():
 
 	_stubber.set_logger(_lgr)
 	_test_collector.set_logger(_lgr)
-	_gui = load('res://addons/gut/GutScene.tscn').instance()
+	_gui = load('res://addons/gut/GutScene.tscn').instantiate()
 
 # ------------------------------------------------------------------------------
 # Initialize controls
@@ -179,7 +179,7 @@ func _ready():
 
 	add_child(_yield_timer)
 	_yield_timer.set_one_shot(true)
-	_yield_timer.connect('timeout', self, '_yielding_callback')
+	_yield_timer.connect('timeout', Callable(self, '_yielding_callback'))
 
 	_setup_gui()
 
@@ -219,16 +219,16 @@ func _setup_gui():
 	# This is how we get the size of the control to translate to the gui when
 	# the scene is run.  This is also another reason why the min_rect_size
 	# must match between both gut and the gui.
-	_gui.rect_size = self.rect_size
+	_gui.size = self.size
 	add_child(_gui)
 	_gui.set_anchor(MARGIN_RIGHT, ANCHOR_END)
 	_gui.set_anchor(MARGIN_BOTTOM, ANCHOR_END)
-	_gui.connect('run_single_script', self, '_on_run_one')
-	_gui.connect('run_script', self, '_on_new_gui_run_script')
-	_gui.connect('end_pause', self, '_on_new_gui_end_pause')
-	_gui.connect('ignore_pause', self, '_on_new_gui_ignore_pause')
-	_gui.connect('log_level_changed', self, '_on_log_level_changed')
-	connect('tests_finished', _gui, 'end_run')
+	_gui.connect('run_single_script', Callable(self, '_on_run_one'))
+	_gui.connect('run_script', Callable(self, '_on_new_gui_run_script'))
+	_gui.connect('end_pause', Callable(self, '_on_new_gui_end_pause'))
+	_gui.connect('ignore_pause', Callable(self, '_on_new_gui_ignore_pause'))
+	_gui.connect('log_level_changed', Callable(self, '_on_log_level_changed'))
+	connect('tests_finished', Callable(_gui, 'end_run'))
 
 func _add_scripts_to_gui():
 	var scripts = []
@@ -438,8 +438,8 @@ func _end_run():
 	# then move the cursor.  I found this workaround through trial and error.
 	_yield_between.timer.set_wait_time(0.1)
 	_yield_between.timer.start()
-	yield(_yield_between.timer, 'timeout')
-	_gui.get_text_box().cursor_set_line(_gui.get_text_box().get_line_count())
+	await _yield_between.timer.timeout
+	_gui.get_text_box().set_caret_line(_gui.get_text_box().get_line_count())
 
 	_is_running = false
 	update()
@@ -517,7 +517,7 @@ func _wait_for_done(result):
 	var print_after = 3
 
 	# sets waiting to false.
-	result.connect('completed', self, '_on_test_script_yield_completed')
+	result.connect('completed', Callable(self, '_on_test_script_yield_completed'))
 
 	if(!_was_yield_method_called):
 		p('/# Yield detected, waiting #/')
@@ -532,7 +532,7 @@ func _wait_for_done(result):
 			p(WAITING_MESSAGE, 2)
 			iter_counter = 0
 		_wait_timer.start()
-		yield(_wait_timer, 'timeout')
+		await _wait_timer.timeout
 
 	emit_signal('done_waiting')
 
@@ -562,7 +562,7 @@ func _call_deprecated_script_method(script, method, alt):
 func _get_indexes_matching_script_name(name):
 	var indexes = [] # empty runs all
 	for i in range(_test_collector.scripts.size()):
-		if(_test_collector.scripts[i].get_filename().find(name) != -1):
+		if(_test_collector.scripts[i].get_scene_file_path().find(name) != -1):
 			indexes.append(i)
 	return indexes
 
@@ -626,7 +626,7 @@ func _test_the_scripts(indexes=[]):
 
 		# yield between test scripts so things paint
 		if(_yield_between.should):
-			yield(_do_yield_between(0.01), 'timeout')
+			await _do_yield_between(0.01).timeout
 
 		# !!!
 		# Hack so there isn't another indent to this monster of a method.  if
@@ -656,7 +656,7 @@ func _test_the_scripts(indexes=[]):
 
 				# yield so things paint
 				if(_should_yield_now()):
-					yield(_do_yield_between(0.001), 'timeout')
+					await _do_yield_between(0.001).timeout
 
 				_call_deprecated_script_method(test_script, 'setup', 'before_each')
 				test_script.before_each()
@@ -666,13 +666,13 @@ func _test_the_scripts(indexes=[]):
 				script_result = test_script.call(_current_test.name)
 				if(_is_function_state(script_result)):
 					_wait_for_done(script_result)
-					yield(self, 'done_waiting')
+					await self.done_waiting
 
 				#if the test called pause_before_teardown then yield until
 				#the continue button is pressed.
 				if(_pause_before_teardown and !_ignore_pause_before_teardown):
 					_gui.pause()
-					yield(_wait_for_continue_button(), SIGNAL_STOP_YIELD_BEFORE_TEARDOWN)
+					await _wait_for_continue_button().SIGNAL_STOP_YIELD_BEFORE_TEARDOWN
 
 				test_script.clear_signal_watcher()
 
@@ -744,10 +744,10 @@ func _get_files(path, prefix, suffix):
 	var files = []
 	var directories = []
 
-	var d = Directory.new()
+	var d = DirAccess.new()
 	d.open(path)
 	# true parameter tells list_dir_begin not to include "." and ".." directories.
-	d.list_dir_begin(true)
+	d.list_dir_begin() # TODOConverter3To4 fill missing arguments https://github.com/godotengine/godot/pull/40547
 
 	# Traversing a directory is kinda odd.  You have to start the process of listing
 	# the contents of a directory with list_dir_begin then use get_next until it
@@ -875,7 +875,7 @@ func add_script(script, was_select_this_one=null):
 # times.
 # ------------------------------------------------------------------------------
 func add_directory(path, prefix=_file_prefix, suffix=_file_extension):
-	var d = Directory.new()
+	var d = DirAccess.new()
 	# check for '' b/c the calls to addin the exported directories 1-6 will pass
 	# '' if the field has not been populated.  This will cause res:// to be
 	# processed which will include all files if include_subdirectories is true.
@@ -1115,7 +1115,7 @@ func set_yield_time(time, text=''):
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 func set_yield_signal_or_time(obj, signal_name, max_wait, text=''):
-	obj.connect(signal_name, self, '_yielding_callback', [true])
+	obj.connect(signal_name, Callable(self, '_yielding_callback').bind(true))
 	_yielding_to.obj = obj
 	_yielding_to.signal_name = signal_name
 
@@ -1149,7 +1149,7 @@ func file_touch(path):
 # deletes the file at the specified path
 # ------------------------------------------------------------------------------
 func file_delete(path):
-	var d = Directory.new()
+	var d = DirAccess.new()
 	var result = d.open(path.get_base_dir())
 	if(result == OK):
 		d.remove(path)
@@ -1160,7 +1160,7 @@ func file_delete(path):
 func is_file_empty(path):
 	var f = File.new()
 	f.open(path, f.READ)
-	var empty = f.get_len() == 0
+	var empty = f.get_length() == 0
 	f.close()
 	return empty
 
@@ -1177,7 +1177,7 @@ func get_file_as_text(path):
 # deletes all files in a given directory
 # ------------------------------------------------------------------------------
 func directory_delete_files(path):
-	var d = Directory.new()
+	var d = DirAccess.new()
 	var result = d.open(path)
 
 	# SHORTCIRCUIT
@@ -1187,7 +1187,7 @@ func directory_delete_files(path):
 	# Traversing a directory is kinda odd.  You have to start the process of listing
 	# the contents of a directory with list_dir_begin then use get_next until it
 	# returns an empty string.  Then I guess you should end it.
-	d.list_dir_begin()
+	d.list_dir_begin() # TODOConverter3To4 fill missing arguments https://github.com/godotengine/godot/pull/40547
 	var thing = d.get_next() # could be a dir or a file or something else maybe?
 	var full_path = ''
 	while(thing != ''):

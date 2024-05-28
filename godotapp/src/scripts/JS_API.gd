@@ -1,9 +1,15 @@
 extends Node
 
+var _is_available: bool = false
+
+
+func _init():
+	_is_available = OS.has_feature("web")
+
 
 func eval(js_code:String):
-	if OS.has_feature("JavaScript"):
-		return JavaScript.eval(js_code)
+	if is_available():
+		return JavaScriptBridge.eval(js_code)
 	else:
 		return null
 
@@ -32,3 +38,7 @@ func variable_exist(variable:String) -> bool:
 	var eval_str = "(typeof " + variable + " !== 'undefined')"
 	var eval_return = JS_API.eval(eval_str)
 	return eval_return
+
+
+func is_available():
+	return _is_available

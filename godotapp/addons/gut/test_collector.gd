@@ -49,7 +49,7 @@ class TestScript:
 			to_return += '.' + inner_class_name
 		return to_return
 
-	func get_filename():
+	func get_scene_file_path():
 		return path.get_file()
 
 	func has_inner_class():

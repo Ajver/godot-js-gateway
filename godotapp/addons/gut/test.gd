@@ -115,32 +115,32 @@ func _init_types_dictionary():
 	types[TYPE_NIL] = 'TYPE_NIL'
 	types[TYPE_BOOL] = 'Bool'
 	types[TYPE_INT] = 'Int'
-	types[TYPE_REAL] = 'Float/Real'
+	types[TYPE_FLOAT] = 'Float/Real'
 	types[TYPE_STRING] = 'String'
 	types[TYPE_VECTOR2] = 'Vector2'
 	types[TYPE_RECT2] = 'Rect2'
 	types[TYPE_VECTOR3] = 'Vector3'
 	#types[8] = 'Matrix32'
 	types[TYPE_PLANE] = 'Plane'
-	types[TYPE_QUAT] = 'QUAT'
+	types[TYPE_QUATERNION] = 'QUAT'
 	types[TYPE_AABB] = 'AABB'
 	#types[12] = 'Matrix3'
-	types[TYPE_TRANSFORM] = 'Transform'
+	types[TYPE_TRANSFORM3D] = 'Transform3D'
 	types[TYPE_COLOR] = 'Color'
 	#types[15] = 'Image'
-	types[TYPE_NODE_PATH] = 'Node Path'
+	types[TYPE_NODE_PATH] = 'Node Path3D'
 	types[TYPE_RID] = 'RID'
 	types[TYPE_OBJECT] = 'TYPE_OBJECT'
 	#types[19] = 'TYPE_INPUT_EVENT'
 	types[TYPE_DICTIONARY] = 'Dictionary'
 	types[TYPE_ARRAY] = 'Array'
-	types[TYPE_RAW_ARRAY] = 'TYPE_RAW_ARRAY'
-	types[TYPE_INT_ARRAY] = 'TYPE_INT_ARRAY'
-	types[TYPE_REAL_ARRAY] = 'TYPE_REAL_ARRAY'
-	types[TYPE_STRING_ARRAY] = 'TYPE_STRING_ARRAY'
-	types[TYPE_VECTOR2_ARRAY] = 'TYPE_VECTOR2_ARRAY'
-	types[TYPE_VECTOR3_ARRAY] = 'TYPE_VECTOR3_ARRAY'
-	types[TYPE_COLOR_ARRAY] = 'TYPE_COLOR_ARRAY'
+	types[TYPE_PACKED_BYTE_ARRAY] = 'TYPE_PACKED_BYTE_ARRAY'
+	types[TYPE_PACKED_INT32_ARRAY] = 'TYPE_PACKED_INT32_ARRAY'
+	types[TYPE_PACKED_FLOAT32_ARRAY] = 'TYPE_PACKED_FLOAT32_ARRAY'
+	types[TYPE_PACKED_STRING_ARRAY] = 'TYPE_PACKED_STRING_ARRAY'
+	types[TYPE_PACKED_VECTOR2_ARRAY] = 'TYPE_PACKED_VECTOR2_ARRAY'
+	types[TYPE_PACKED_VECTOR3_ARRAY] = 'TYPE_PACKED_VECTOR3_ARRAY'
+	types[TYPE_PACKED_COLOR_ARRAY] = 'TYPE_PACKED_COLOR_ARRAY'
 	types[TYPE_MAX] = 'TYPE_MAX'
 
 const EDITOR_PROPERTY = PROPERTY_USAGE_SCRIPT_VARIABLE | PROPERTY_USAGE_DEFAULT
@@ -506,7 +506,7 @@ func _find_object_property(obj, property_name, property_usage=null):
 	var found = false
 	var properties = obj.get_property_list()
 
-	while !found and !properties.empty():
+	while !found and !properties.is_empty():
 		var property = properties.pop_back()
 		if property['name'] == property_name:
 			if property_usage == null or property['usage'] == property_usage:
@@ -1015,7 +1015,7 @@ func ignore_method_when_doubling(thing, method_name):
 	var path = double_info.path
 
 	if(double_info.is_scene()):
-		var inst = thing.instance()
+		var inst = thing.instantiate()
 		if(inst.get_script()):
 			path = inst.get_script().get_path()
 
